@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
+from src.schemas.types import EmailStr, AlphaStr, PhoneNumberStr
 
 import re
 
@@ -19,11 +20,13 @@ class Login(BaseModel):
             Raises:
                 ValueError: If the email address format is invalid.
     """
-    email: str = Field(..., example='user@example.com', description='Email address of a customer')
+    email: EmailStr = Field(..., example='user@example.com', description='Email address of a customer')
     password: str = Field(..., description='Customer password')
 
-    @field_validator('email', mode='after')
-    def validate_email(cls, value):
-        if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", value):
-            raise ValueError('Invalid email format, it should be like: test@example.com')
-        return value
+
+class CustomerRequestBody(BaseModel):
+    first_name: AlphaStr = Field(..., example="John")
+    last_name: AlphaStr = Field(..., example="Doe") 
+    email: EmailStr = Field(..., example="email@example.com")
+    password: str = Field(..., example="password")
+    phone: PhoneNumberStr = Field(..., example="+1234567890")
