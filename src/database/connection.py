@@ -20,19 +20,12 @@ class DatabaseConnection:
         __new__(cls):
             Creates a new sessionmaker instance if it doesn't exist and returns a new session.
     """
-    _session_maker: sessionmaker = None
+    _session_maker: Session = None
 
     def __new__(cls):
+        database_url = f'mysql+pymysql://{settings.database_user}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}'
+        engine = create_engine(database_url, pool_recycle=120)
         if cls._session_maker is None:
-            database_url = f"""
-            mysql+mysqlconnector://
-                {settings.database_user}:
-                {settings.database_password}@
-                {settings.database_host}:
-                {settings.database_port}/
-                {settings.database_name}
-            """
-            engine = create_engine(database_url)
             cls._session_maker = sessionmaker(engine, autoflush=False)
         return cls._session_maker()
 

@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 
 from src.database.connection import Base, get_database_connection
+
+from datetime import datetime, timezone
 
 class CustomerModel(Base):
     """
@@ -18,9 +20,10 @@ class CustomerModel(Base):
     __tablename__ = 'customers'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(255))
+    first_name = Column(String(255))
+    last_name = Column(String(255))
     email = Column(String(255), unique=True)
     phone = Column(String(255))
-
-    def __repr__(self):
-        return f'<Customer(id={self.id}, name={self.name}, email={self.email}, phone={self.phone})>'
+    password = Column(String(255))
+    created_at = Column(DateTime(), default=datetime.now(timezone.utc).isoformat())
+    updated_at = Column(DateTime(), default=datetime.now(timezone.utc).isoformat())
