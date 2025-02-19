@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from src.database.models import CustomerModel
+
 
 class CustomerRepository:
     """
@@ -38,10 +40,11 @@ class CustomerRepository:
     def get_by_email(self, email: str) -> CustomerModel:
         return self.db.query(CustomerModel).filter(CustomerModel.email == email).first()
     
-    def get_all(self, skip, limit) -> list[CustomerModel]:
-        return self.db.query(CustomerModel).offset(skip).limit(limit).all()
+    def get_all(self) -> list[CustomerModel]:
+        return select(CustomerModel)
+        #return self.db.query(CustomerModel).offset(skip).limit(limit).all()
 
-    def update(self, id: int, data: dict) -> CustomerModel:
+    def update(self, id: int, data: dict) -> CustomerModel | None:
         customer = self.get_by_id(id)
         if customer:
             for key, value in data.items():
