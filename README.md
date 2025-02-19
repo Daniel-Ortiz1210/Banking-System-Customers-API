@@ -12,9 +12,9 @@ The API is built using Python, FastAPI and SQLAlchemy.
   - [Contents](#contents)
   - [Project Setup and Installation](#project-setup-and-installation)
   - [Prerequisites](#prerequisites)
-  - [1. Clone the Repository](#1-clone-the-repository)
-  - [2. Set Up the Environment Variables](#2-set-up-the-environment-variables)
-  - [3. Build and Run the Containers](#3-build-and-run-the-containers)
+    - [1. Clone the Repository](#1-clone-the-repository)
+    - [2. Set Up the Environment Variables](#2-set-up-the-environment-variables)
+    - [3. Build and Run the Containers](#3-build-and-run-the-containers)
   - [API REST Documentation](#api-rest-documentation)
   - [Arquitecture and Design](#arquitecture-and-design)
   - [Testing Instructions](#testing-instructions)
@@ -30,7 +30,7 @@ Before you begin, ensure that you have the following tools installed on your mac
 - **Docker Compose**: To manage multiple containers.
 - **Python**: To check and use the local environment if needed.
 
-## 1. Clone the Repository
+### 1. Clone the Repository
 
 First, you need to clone this repository to your local machine. Open a terminal and run the following command:
 
@@ -39,7 +39,7 @@ git clone https://github.com/Daniel-Ortiz1210/Banking-System-Customers-API.git
 cd <Banking-System-Customers-API>
 ```
 
-## 2. Set Up the Environment Variables
+### 2. Set Up the Environment Variables
 
 Create a `.env.dev` file in the root directory of the project and copy the content from the file attached in the email.
 If you don't have the file, you can create it manually with the following content:
@@ -58,7 +58,7 @@ TOKEN_ALGORITHM='HS256'
 TOKEN_EXPIRATION_IN_MINUTES=2
 ```
 
-## 3. Build and Run the Containers
+### 3. Build and Run the Containers
 
 To build and run the containers, you need to execute the following command:
 
