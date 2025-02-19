@@ -11,7 +11,7 @@ The API is built using Python, FastAPI and SQLAlchemy.
   - [Description](#description)
   - [Contents](#contents)
   - [Project Setup and Installation](#project-setup-and-installation)
-  - [Prerequisites](#prerequisites)
+    - [Prerequisites](#prerequisites)
     - [1. Clone the Repository](#1-clone-the-repository)
     - [2. Set Up the Environment Variables](#2-set-up-the-environment-variables)
     - [3. Build and Run the Containers](#3-build-and-run-the-containers)
@@ -21,7 +21,7 @@ The API is built using Python, FastAPI and SQLAlchemy.
 
 ## Project Setup and Installation
 
-## Prerequisites
+### Prerequisites
 
 Before you begin, ensure that you have the following tools installed on your machine:
 
@@ -63,11 +63,12 @@ TOKEN_EXPIRATION_IN_MINUTES=2
 To build and run the containers, you need to execute the following command:
 
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 
 ## API REST Documentation
 
+Once the containers are up and running, you can access the API documentation using your browser.
 The API documentation is available at the following URL:
 
 ```bash
