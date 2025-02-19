@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 import uvicorn
