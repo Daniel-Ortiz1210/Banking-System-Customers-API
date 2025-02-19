@@ -20,9 +20,14 @@ class ValidationErrorResponse(BaseModel):
             )
         return details
 
-
-class SuccessResponse(BaseModel):
-    status: Optional[str] = Field('success', example='success')
+class HttpResponse(BaseModel):
+    success: Optional[bool] = Field(True, example=True)
     message: Optional[str] = Field('Operation successful', example='Operation successful')
-    data: Optional[Union[list, dict]]= Field({}, example={})
     timestamp: Optional[str] = Field(datetime.now().isoformat(), example="2021-01-01T00:00:00")
+
+class SuccessResponse(HttpResponse):
+    data: Optional[Union[list, dict]]= Field({}, example={})
+
+class BadResponse(HttpResponse):
+    success: Optional[bool] = Field(False, example=False)
+    detail: Optional[Union[list, dict]]= Field({}, example={})
