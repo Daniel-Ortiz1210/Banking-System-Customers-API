@@ -13,9 +13,6 @@ class CustomerModel(Base):
         name (str): The name of the customer.
         email (str): The unique email address of the customer.
         phone (str): The phone number of the customer.
-
-    Methods:
-        __repr__(): Returns a string representation of the CustomerModel instance.
     """
     __tablename__ = 'customers'
 
