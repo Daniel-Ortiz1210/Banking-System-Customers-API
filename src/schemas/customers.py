@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field, validator, AfterValidator, field_validato
 from typing import List, Optional, Annotated
 from datetime import datetime
 import re
-
 from src.schemas.types import AlphaStr, EmailStr, PhoneNumberStr
 
 class CustomerBase(BaseModel):
@@ -31,3 +30,4 @@ class CustomerBase(BaseModel):
     updated_at: Optional[datetime] = Field(example="2021-01-01T00:00:00", default=datetime.now().isoformat())
 
     model_config = ConfigDict(from_attributes=True)
+
