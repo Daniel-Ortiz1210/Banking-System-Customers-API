@@ -48,10 +48,10 @@ If you don't have the file, you can create it manually with the following conten
 APP_NAME='[Tech Assessment] Banking System Customers API'
 HOST='0.0.0.0'
 PORT=3000
-DATABASE_HOST='localhost'
-DATABASE_PORT=5432
-DATABASE_USER='postgres'
-DATABASE_PASSWORD='postgres'
+DATABASE_HOST='mysql8-us-east-1a-develop.c5niavzkvagt.us-east-1.rds.amazonaws.com'
+DATABASE_PORT=3306
+DATABASE_USER='development-user'
+DATABASE_PASSWORD='CWPxFcao537Sa21vcO0xkl'
 DATABASE_NAME='customers'
 TOKEN_SECRET_KEY='XWPxvcaou37va213cp0xml'
 TOKEN_ALGORITHM='HS256'
