@@ -23,7 +23,7 @@ class Login(BaseModel):
     email: EmailStr = Field(..., example='user@example.com', description='Email address of a customer')
     password: str = Field(..., description='Customer password')
 
-
+      
 class CustomerRequestBody(BaseModel):
     first_name: AlphaStr = Field(..., example="John")
     last_name: AlphaStr = Field(..., example="Doe") 
