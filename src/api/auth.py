@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from src.schemas.requests import Login
-from src.schemas.responses import ValidationErrorResponse, SuccessResponse
+from src.schemas.responses import ValidationErrorResponse, SuccessResponse, BadResponse
 from src.utils.token import JWTManager
 from src.utils.logger import Logger
 from src.database.connection import get_database_connection
@@ -52,18 +52,24 @@ def login(
 
     if not customer:
         logger.log('ERROR', f"[/api/v1/auth/login] [POST] [401] User not found")
-        return JSONResponse(content={}, status_code=status.HTTP_404_NOT_FOUND)
+        
+        response = BadResponse(message='Customer not found')
+        return JSONResponse(content=response.model_dump(), status_code=status.HTTP_404_NOT_FOUND)
     else:
         if not customer.password == credentials.password:
             logger.log('ERROR', f"[/api/v1/auth/login] [POST] [401] Invalid password")
-            return JSONResponse(content={}, status_code=status.HTTP_401_UNAUTHORIZED)
+            
+            response = BadResponse(message='Invalid password')
+            return JSONResponse(content=response.model_dump(), status_code=status.HTTP_401_UNAUTHORIZED)
         else:
             try:
                 token_manager = JWTManager()
                 token = token_manager.encode(credentials.model_dump())
             except Exception as e:
                 logger.log('ERROR', f"[/api/v1/auth/login] [POST] [500] Error generating token: {str(e)}")
-                return JSONResponse(content={'error': 'Internal Server Error'}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+                response = BadResponse(message='Possible error generating token')
+                return JSONResponse(content=response.model_dump(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             http_response = SuccessResponse(data={'token': token})
 
