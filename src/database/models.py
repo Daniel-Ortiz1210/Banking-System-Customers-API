@@ -1,8 +1,11 @@
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 
-from src.database.connection import Base, get_database_connection
+from src.database.connection import engine
 
 from datetime import datetime, timezone
+
+Base = declarative_base()
 
 class CustomerModel(Base):
     """
@@ -24,3 +27,5 @@ class CustomerModel(Base):
     password = Column(String(255))
     created_at = Column(DateTime(), default=datetime.now(timezone.utc).isoformat())
     updated_at = Column(DateTime(), default=datetime.now(timezone.utc).isoformat())
+
+Base.metadata.create_all(engine)
