@@ -24,10 +24,16 @@ router = APIRouter(
 
 
 @router.get('/')
-def get_all_customers(
-    db: Session = Depends(get_database_connection),
-    ) -> Page[CustomerBase]:
-    
+def get_all_customers(db: Session = Depends(get_database_connection)) -> Page[CustomerBase]:
+    """
+    **Arguments** \n
+        - db (Session): Database session dependency, provided by FastAPI's Depends. \n
+    **Responses** \n
+        - 200: A paginated list of customers (Page[CustomerBase]). \n
+    **Logs Levels** \n
+        - INFO: Logs the start of the customer retrieval process. \n
+        - INFO: Logs the successful completion of the customer retrieval process. \n
+    """
     logger = Logger()
     
     logger.log('INFO', f"[/api/v1/customers/] [GET] Retreiving customers from database")
@@ -39,7 +45,6 @@ def get_all_customers(
     logger.log('INFO', f"[/api/v1/customers/] [GET] [200] Customers retreived successfully")
 
     return result
-    
 
 
 @router.get('/{id}')
@@ -52,6 +57,23 @@ def get_customer_details(
         description='Unique identity value for a Customer'
         )
     ):
+    """
+    Retrieve customer details by ID.\n
+    This endpoint retrieves the details of a customer from the database using the provided customer ID.\n
+    It also verifies that the customer making the request has access to the requested customer ID.\n
+    \n
+    **Responses:** \n
+        - 200: Customer details retrieved successfully.\n
+        - 403: Forbidden access to customer with the provided ID.\n
+        - 404: Customer with the provided ID not found.\n
+    **Log Levels:**\n
+        - INFO:\n
+            - Retrieving customer with ID from database.\n
+            - Customer with ID retrieved successfully.\n
+        - ERROR:\n
+            - Customer with ID not found.\n
+            - Forbidden access to customer with ID.\n
+    """
     logger = Logger()
     
     logger.log('INFO',f"[/api/v1/customers/{id}] [GET] Retreiving customer with ID {id} from database")
@@ -92,13 +114,21 @@ def get_customer_details(
 
 
 @router.post('/')
-def create_customer(
-    db: Session = Depends(get_database_connection),
-    request: dict = Body(
-        ...,
-        json_schema_extra=CustomerBase.schema()
-        )
-    ):
+def create_customer(db: Session = Depends(get_database_connection), request: dict = Body(...,json_schema_extra=CustomerBase.schema())):
+    """
+    Create a new customer in the database. \n
+    This function handles the creation of a new customer by validating the request body \n
+    persisting the customer data to the database, and generating a JWT token for the customer. \n
+    **Args:** \n
+        - db (Session): Database session dependency. \n
+        - request (dict): Request body containing customer data.\n
+    **Returns:** \n
+        - JSONResponse: A JSON response with the status of the operation and relevant data or error messages. \n
+    **Raises:** \n
+        - ValidationError: If the request body validation fails. \n
+        - IntegrityError: If there is a database integrity error (e.g., customer already exists). \n
+        - Exception: If there is an error generating the JWT token.
+    """
     
     logger = Logger()
     
@@ -152,16 +182,31 @@ def create_customer(
 
 
 @router.put('/{id}')
-def update_customer(
-    db: Session = Depends(get_database_connection),
-    decoded_token: dict = Depends(JWTBearerDependencie()),
-    id: int = Path(
-        ...,
-        title='Customer ID',
-        description='Unique identity value for a Customer'
-        ),
-    request: dict = Body(..., json_schema_extra=CustomerRequestBody.schema())
-    ):
+def update_customer(db: Session = Depends(get_database_connection), decoded_token: dict = Depends(JWTBearerDependencie()), id: int = Path(..., title='Customer ID', description='Unique identity value for a Customer'), request: dict = Body(..., json_schema_extra=CustomerRequestBody.schema())):
+    """
+    Update a customer in the database.\n
+    This endpoint replaces the customer data with the provided request body for the customer with the specified ID.\n
+    **Args:**\n
+        - db (Session): Database session dependency.\n
+        - decoded_token (dict): Decoded JWT token dependency.\n
+        - id (int): Unique identity value for a Customer.\n
+        - request (dict): Request body containing the customer data to update.\n
+    **Returns:**\n
+        - JSONResponse: JSON response with the status of the operation and any relevant data or error messages.\n
+    **Raises:**\n
+        - ValidationError: If the request body validation fails.\n
+        - Exception: If there is an error generating the JWT token.\n
+    **Logs:**\n
+        - INFO: Logs the start and successful completion of the update operation.\n
+        - ERROR: Logs any errors encountered during the process.\n
+    **Responses:**\n
+        - 400: Bad request if the request body validation fails.\n
+        - 404: Not found if the customer with the specified ID does not exist.\n
+        - 403: Forbidden if the logged-in customer does not have access to the specified resource.\n
+        - 500: Internal server error if there is an error generating the JWT token.\n
+        - 201: Created if the customer is updated successfully.\n
+    """
+    
     logger = Logger()
     
     logger.log('INFO', f"[/api/v1/customers/{id}] [PUT] Replacing customer with ID {id} from database")
@@ -229,15 +274,24 @@ def update_customer(
 
 
 @router.delete('/{id}')
-def delete_customer(
-    decoded_token: dict = Depends(JWTBearerDependencie()),
-    db: Session = Depends(get_database_connection),
-    id: int = Path(
-        ...,
-        title='Customer ID',
-        description='Unique identity value for a Customer'
-        ),
-    ):
+def delete_customer(decoded_token: dict = Depends(JWTBearerDependencie()),db: Session = Depends(get_database_connection), id: int = Path(...,title='Customer ID',description='Unique identity value for a Customer')):
+    """
+    Deletes a customer from the database.\n
+    **Args:**\n
+        - decoded_token (dict): The decoded JWT token containing user information.\n
+        - db (Session): The database session dependency.\n
+        - id (int): The unique identity value for a customer.\n
+    **Returns:**\n
+        - 404 Not Found: If the customer with the given ID does not exist.\n
+        - 403 Forbidden: If the logged-in customer does not have access to delete the specified customer.\n
+        - 204 No Content: If the customer is successfully deleted.\n
+    **Logs:**\n
+        - INFO: When attempting to delete a customer.\n
+        - ERROR: If the customer with the given ID does not exist.\n
+        - ERROR: If the logged-in customer does not have access to delete the specified customer.\n
+        - INFO: If the customer is successfully deleted.\n
+    """
+    
     logger = Logger()
     
     logger.log('INFO', f"[/api/v1/customers/{id}] [DELETE] Deleting customer with ID {id} from database")
