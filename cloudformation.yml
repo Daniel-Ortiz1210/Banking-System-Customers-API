@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "CloudFormation template to create a publicly accessible RDS MySQL instance"
+
+Resources:
+  MyDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow MySQL access"
+      VpcId: vpc-0f06869a5fbbe6689
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0 
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Subnet group for RDS"
+      SubnetIds:
+        - subnet-0ec3f7abf2eed48cd 
+        - subnet-08dcf7eae3193c496
+        - subnet-0c10be8aa9138757e
+
+
+  CustomersDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: customersdatabase-mysql
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      EngineVersion: "8.0"
+      MasterUsername: admin
+      MasterUserPassword: Xcvi762gsnoanAswrabzn 
+      DBName: customers
+      VPCSecurityGroups:
+        - !Ref MyDBSecurityGroup
+      BackupRetentionPeriod: 7
+      MultiAZ: false
+      PubliclyAccessible: true 
+      DBSubnetGroupName: !Ref DBSubnetGroup
+
+Outputs:
+  RDSInstanceEndpoint:
+    Description: "The endpoint of the publicly accessible RDS instance"
+    Value: !GetAtt CustomersDBInstance.Endpoint.Address
