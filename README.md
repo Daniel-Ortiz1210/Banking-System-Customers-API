@@ -18,7 +18,6 @@ The API is built using Python, FastAPI and SQLAlchemy.
     - [4. Build and Run the Containers](#4-build-and-run-the-containers)
     - [5. Local runnning](#5-local-runnning)
   - [API REST Documentation](#api-rest-documentation)
-  - [Arquitecture and Design](#arquitecture-and-design)
   - [Testing Instructions](#testing-instructions)
 
 ## Project Setup and Installation
@@ -160,12 +159,10 @@ Once the containers are up and running, you can access the API documentation usi
 The API documentation is available at the following URL:
 
 ```bash
-http://localhost:3000/docs
+http://0.0.0.0:3000/docs
 ```
 
 **Note**: The API documentation is generated using Swagger UI.
-
-## Arquitecture and Design
 
 ## Testing Instructions
 
