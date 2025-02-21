@@ -1,13 +1,15 @@
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from src.utils.config import Config
 
 settings = Config()
+
+database_url = f'mysql+pymysql://{settings.database_user}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}'
+engine = create_engine(database_url, pool_recycle=120)
 
 class DatabaseConnection:
     """
@@ -23,13 +25,10 @@ class DatabaseConnection:
     _session_maker: Session = None
 
     def __new__(cls):
-        database_url = f'mysql+pymysql://{settings.database_user}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}'
-        engine = create_engine(database_url, pool_recycle=120)
+                
         if cls._session_maker is None:
             cls._session_maker = sessionmaker(engine, autoflush=False)
         return cls._session_maker()
-
-Base = declarative_base()
 
 def get_database_connection() -> Session:
     db = DatabaseConnection()
