@@ -21,19 +21,18 @@ def login(
         ),
     db: Session = Depends(get_database_connection)):
     """
-    Authenticate a user with provided credentials.
-    This endpoint accepts a dictionary of user credentials, validates them,
-    and returns a JWT token if the credentials are valid.
-    
-    Args:
-        credentials (dict): A dictionary containing user credentials.
-    Returns:
-        JSONResponse: A JSON response containing either a JWT token on success, or an error message on failure.
-    Raises:
-        ValidationError: If the provided credentials are invalid.
-        Exception: If there is an error generating the JWT token.
+    Authenticates a user based on provided credentials.\n
+    **Args:** \n
+        credentials (dict): A dictionary containing the user's login credentials.\n
+        db (Session): Database session dependency.\n
+    **Returns:**\n
+        - 200 OK: If the user is authenticated successfully, returns a token.\n
+        - 400 Bad Request: If there is a validation error in the request body.\n
+        - 401 Unauthorized: If the user is not found or the password is invalid.\n
+        - 404 Not Found: If the user is not found.\n
+        - 500 Internal Server Error: If there is an error generating the token.\n
     """
-    
+
     logger = Logger()
     logger.log('INFO', f"[/api/v1/auth/login] [POST] Authenticating user with credentials {credentials}")
 
