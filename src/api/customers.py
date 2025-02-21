@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Body, Depends, Header, Path, status, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from src.schemas.customers import CustomerBase
 from src.schemas.requests import CustomerRequestBody
@@ -75,7 +76,15 @@ def get_customer_details(
             
             return JSONResponse(content=response.model_dump(), status_code=status.HTTP_403_FORBIDDEN)
         else:
-            http_response = SuccessResponse(data={'id': customer.id}).model_dump()
+            http_response = SuccessResponse(data=
+                {
+                    'id': customer.id,
+                    'first_name': customer.first_name,
+                    'last_name': customer.last_name,
+                    'email': customer.email,
+                    'phone': customer.phone,
+                }
+            ).model_dump()
 
             logger.log('INFO', f"[/api/v1/customers/{id}] [GET] [200] Customer with ID {id} retreived successfully")
     
@@ -106,11 +115,19 @@ def create_customer(
         
         return JSONResponse(content=error_response.model_dump(), status_code=status.HTTP_400_BAD_REQUEST)
     
-    body_to_dict = body.model_dump()
+    try:
+        body_to_dict = body.model_dump()
 
-    customer_repository = CustomerRepository(db)
+        customer_repository = CustomerRepository(db)
     
-    new_customer = customer_repository.create(body_to_dict)
+        new_customer = customer_repository.create(body_to_dict)
+    except IntegrityError as e:
+        
+        logger.log('ERROR', f"[/api/v1/customers/] [POST] [400] Error creating customer: {str(e)}")
+        
+        response = BadResponse(message='Customer already exists')
+        
+        return JSONResponse(content=response.model_dump(), status_code=status.HTTP_400_BAD_REQUEST)
     
     try:
         jwt_manager = JWTManager()
@@ -188,8 +205,26 @@ def update_customer(
 
             logger.log('INFO', f"[/api/v1/customers/{id}] [PUT] [201] Customer with ID {id} updated successfully")
 
-            response = SuccessResponse(data={})
-
+            try:
+                jwt_manager = JWTManager()
+                
+                token = jwt_manager.encode(body_to_dict)
+            except Exception as e:
+                
+                logger.log('ERROR', f"[/api/v1/customers/{id}] [PUT] [500] Error generating token: {str(e)}")
+                
+                response = BadResponse(message='Possible error generating token')
+                
+                return JSONResponse(content=response.model_dump(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            response = SuccessResponse(data={
+                'token': token,
+                'customer': {
+                    'id': updated_customer.id,
+                    'email': updated_customer.email
+                    }
+                }
+            )
             return JSONResponse(content=response.model_dump(), status_code=status.HTTP_201_CREATED)
 
 
@@ -231,4 +266,6 @@ def delete_customer(
 
             customer_repository.delete(id)
 
-            return JSONResponse(content={}, status_code=status.HTTP_204_NO_CONTENT)
+            response = SuccessResponse()
+
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
