@@ -26,6 +26,10 @@ router = APIRouter(
 @router.get('/')
 def get_all_customers(db: Session = Depends(get_database_connection)) -> Page[CustomerBase]:
     """
+    Retrieve all customers from the database. \n
+    This endpoint retrieves all customers from the database and paginates the results 
+    using the FastAPI pagination extension. \n
+
     **Arguments** \n
         - db (Session): Database session dependency, provided by FastAPI's Depends. \n
     **Responses** \n
@@ -62,6 +66,7 @@ def get_customer_details(
     This endpoint retrieves the details of a customer from the database using the provided customer ID.\n
     It also verifies that the customer making the request has access to the requested customer ID.\n
     \n
+    
     **Responses:** \n
         - 200: Customer details retrieved successfully.\n
         - 403: Forbidden access to customer with the provided ID.\n
@@ -119,6 +124,7 @@ def create_customer(db: Session = Depends(get_database_connection), request: dic
     Create a new customer in the database. \n
     This function handles the creation of a new customer by validating the request body \n
     persisting the customer data to the database, and generating a JWT token for the customer. \n
+    
     **Args:** \n
         - db (Session): Database session dependency. \n
         - request (dict): Request body containing customer data.\n
@@ -186,6 +192,8 @@ def update_customer(db: Session = Depends(get_database_connection), decoded_toke
     """
     Update a customer in the database.\n
     This endpoint replaces the customer data with the provided request body for the customer with the specified ID.\n
+    It also generates a new JWT token for the updated customer. \n
+
     **Args:**\n
         - db (Session): Database session dependency.\n
         - decoded_token (dict): Decoded JWT token dependency.\n
@@ -277,6 +285,11 @@ def update_customer(db: Session = Depends(get_database_connection), decoded_toke
 def delete_customer(decoded_token: dict = Depends(JWTBearerDependencie()),db: Session = Depends(get_database_connection), id: int = Path(...,title='Customer ID',description='Unique identity value for a Customer')):
     """
     Deletes a customer from the database.\n
+
+    This endpoint deletes a customer from the database using the provided customer ID.\n
+    It also verifies that the customer making the request has access to the specified customer ID.\n
+
+
     **Args:**\n
         - decoded_token (dict): The decoded JWT token containing user information.\n
         - db (Session): The database session dependency.\n
