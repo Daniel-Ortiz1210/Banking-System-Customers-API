@@ -2,8 +2,7 @@
 
 ## Description
 
-This is a simple API that allows you to manage customers. You can create, read, update and delete customers.
-The API is built using Python, FastAPI and SQLAlchemy.
+This project is a RESTful API that allows users to manage customers in a banking system.
 
 ## Contents
 
