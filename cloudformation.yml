@@ -18,9 +18,9 @@ Resources:
     Properties:
       DBSubnetGroupDescription: "Subnet group for RDS"
       SubnetIds:
-        - subnet-0ec3f7abf2eed48cd 
-        - subnet-08dcf7eae3193c496
-        - subnet-0c10be8aa9138757e
+        - subnet-0ec3f7abf2eed48cd # Replace with your subnet IDs
+        - subnet-08dcf7eae3193c496 # Replace with your subnet IDs
+        - subnet-0c10be8aa9138757e # Replace with your subnet IDs
 
 
   CustomersDBInstance:
