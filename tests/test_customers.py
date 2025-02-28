@@ -14,7 +14,7 @@ def test_customer_endpoints():
         'last_name': 'Doe',
         'email': faker.email(),
         'phone': '+1234567890',
-        'password': 'mockpassword'
+        'password': 'Asdfghjk1'
     }   
 
     response = client.post('/api/v1/customers/', json={
@@ -69,7 +69,7 @@ def test_customer_endpoints():
         'last_name': 'McGill',
         'email': faker.email(),
         'phone': '+1234567001',
-        'password': 'mockpassword2'
+        'password': 'Asdfghjk1'
         }
     response = client.put(f'/api/v1/customers/100', json=updated_payload,
         headers={
