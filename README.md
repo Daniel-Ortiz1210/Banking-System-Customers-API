@@ -1,14 +1,8 @@
 # Tech-Assesment-Customers-API
 
-## Description
-
-This is a simple API that allows you to manage customers. You can create, read, update and delete customers.
-The API is built using Python, FastAPI and SQLAlchemy.
-
 ## Contents
 
 - [Tech-Assesment-Customers-API](#tech-assesment-customers-api)
-  - [Description](#description)
   - [Contents](#contents)
   - [Project Setup and Installation](#project-setup-and-installation)
     - [Prerequisites](#prerequisites)
