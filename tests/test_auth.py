@@ -13,7 +13,7 @@ def test_login():
         'last_name': 'Doe',
         'email': faker.email(),
         'phone': '+123456789900',
-        'password': 'mockpassword'
+        'password': 'Asdfghjk1'
     }   
 
     response = client.post('/api/v1/auth/login', json={
@@ -33,7 +33,7 @@ def test_login():
 
     response = client.post('/api/v1/auth/login', json={
         'email': request_payload['email'],
-        'password': 'wrongpassword'
+        'password': 'Asdfghjk11'
     })
 
     assert response.status_code == 401
