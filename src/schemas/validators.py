@@ -60,3 +60,30 @@ def validate_phone_number(value: str):
     elif not str(value).startswith('+'):
         raise ValueError('Phone number should start with +')
     return value
+
+
+def validate_password(value: str):
+    """
+    Validates a password to ensure it meets specific criteria.
+
+    Args:
+        value (str): The password to validate.
+
+    Returns:
+        str: The validated password.
+
+    Raises:
+        ValueError: If the password is not at least 8 characters long,
+                    or if it does not contain at least one uppercase letter,
+                    one lowercase letter, and one digit.
+    """
+    if len(value) < 8:
+        raise ValueError('Password should be at least 8 characters long')
+    elif not any(char.isupper() for char in value):
+        raise ValueError('Password should contain at least one uppercase letter')
+    elif not any(char.islower() for char in value):
+        raise ValueError('Password should contain at least one lowercase letter')
+    elif not any(char.isdigit() for char in value):
+        raise ValueError('Password should contain at least one digit')
+    return value
+    
