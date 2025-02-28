@@ -9,7 +9,7 @@ settings = Config()
 
 app = FastAPI(
     title=settings.app_name,
-    description='A simple API to manage customers',
+    description='',
     version='1.0.0',
     docs_url='/docs',
     redoc_url='/redoc',
