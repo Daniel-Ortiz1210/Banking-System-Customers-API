@@ -22,15 +22,24 @@ def login(
     db: Session = Depends(get_database_connection)):
     """
     Authenticates a user based on provided credentials.\n
+    **URL:** /api/v1/auth/login\n
+    **Method:** POST\n
+    **Auth required:** NO\n
+    **Permissions required:** None\n
     **Args:** \n
         credentials (dict): A dictionary containing the user's login credentials.\n
         db (Session): Database session dependency.\n
-    **Returns:**\n
+    **Responses:**\n
         - 200 OK: If the user is authenticated successfully, returns a token.\n
         - 400 Bad Request: If there is a validation error in the request body.\n
         - 401 Unauthorized: If the user is not found or the password is invalid.\n
         - 404 Not Found: If the user is not found.\n
         - 500 Internal Server Error: If there is an error generating the token.\n
+    Raises:\n
+        - ValidationError: If there is a validation error in the request body.\n
+    **Log Levels:**\n
+        - INFO: When the user is authenticated successfully.\n
+        - ERROR: When there is a validation error in the request body, the user is not found, the password is invalid, or there is an error generating the token.\n
     """
 
     logger = Logger()
