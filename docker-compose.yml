@@ -1,7 +1,22 @@
+
 services:
+
   app:
     build: .
     ports:
       - "3000:3000"
+    depends_on:
+      - database
     volumes:
       - .:/app
+
+  database:
+    image: mongo:latest
+    container_name:  database
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'FTc46xydb9iJHy6158!*'
+      MONGO_INITDB_DATABASE: 'users'
+    ports:
+      - "27017:27017"
