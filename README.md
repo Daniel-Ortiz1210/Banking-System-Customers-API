@@ -29,8 +29,8 @@ Before you begin, ensure that you have the following tools installed on your mac
 First, you need to clone this repository to your local machine. Open a terminal and run the following command:
 
 ```bash
-git clone https://github.com/Daniel-Ortiz1210/Banking-System-Customers-API.git
-cd <Banking-System-Customers-API>
+git clone https://github.com/Daniel-Ortiz1210/AccessControl-API.git
+cd <AccessControl-API>
 ```
 
 ### 3. Set Up the Environment Variables
