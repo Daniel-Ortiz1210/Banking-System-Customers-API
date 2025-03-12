@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field, validator, AfterValidator, field_validator, ConfigDict
+from pydantic import BaseModel, Field, AfterValidator, field_validator, ConfigDict
 from typing import List, Optional, Annotated
 from datetime import datetime
-import re
 from src.schemas.types import AlphaStr, EmailStr, PhoneNumberStr
+from enum import Enum
 
 class CustomerBase(BaseModel):
     """
@@ -31,3 +31,10 @@ class CustomerBase(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class RolesEnum(str, Enum):
+    ADMIN = 'admin'
+    FILMS = 'films'
+    PEOPLE = 'people'
+    LOCATIONS = 'locations'
+    SPECIES = 'species'
+    VEHICLES = 'vehicles'
