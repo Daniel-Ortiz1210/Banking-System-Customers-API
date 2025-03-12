@@ -13,5 +13,6 @@ class Config(BaseSettings):
     token_secret_key: str
     token_algorithm: str
     token_expiration_in_minutes: int
+    
 
-    model_config = SettingsConfigDict(env_file=f"{os.getcwd()}/.env.dev")
+    model_config = SettingsConfigDict(env_file=f"{os.getcwd()}/.env")
