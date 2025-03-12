@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi_pagination import add_pagination
 import uvicorn
 
 from src.utils.config import Config
@@ -16,7 +15,6 @@ app = FastAPI(
     openapi_url='/openapi.json',
 )
 app.include_router(version_router)
-add_pagination(app)
 
 if __name__ == '__main__':
     uvicorn.run(
