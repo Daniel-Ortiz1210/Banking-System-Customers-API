@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from src.schemas.types import EmailStr, AlphaStr, PhoneNumberStr, PasswordStr
+from src.schemas.customers import RolesEnum
 
 import re
 
@@ -20,7 +21,7 @@ class Login(BaseModel):
             Raises:
                 ValueError: If the email address format is invalid.
     """
-    email: EmailStr = Field(..., example='user@example.com', description='Email address of a customer')
+    email: EmailStr = Field(..., example='email@example.com', description='Email address of a customer')
     password: PasswordStr = Field(..., description='Customer password')
 
 
@@ -29,4 +30,4 @@ class CustomerRequestBody(BaseModel):
     last_name: AlphaStr = Field(..., example="Doe") 
     email: EmailStr = Field(..., example="email@example.com")
     password: PasswordStr = Field(..., example="password")
-    phone: PhoneNumberStr = Field(..., example="+1234567890")
+    role: RolesEnum = Field(..., example="admin")
