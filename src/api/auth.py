@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Body, status, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-from sqlalchemy.orm import Session
+from pymongo import MongoClient
 
 from src.schemas.requests import Login
 from src.schemas.responses import ValidationErrorResponse, SuccessResponse, BadResponse
 from src.utils.token import JWTManager
 from src.utils.logger import Logger
-from src.database.connection import get_database_connection
-from src.database.repository.customers import CustomerRepository
+from src.database.connection import get_database_client
+from src.database.repository.users import UsersRepository
 
 router = APIRouter(prefix='/auth', tags=['Authentication'])
 
@@ -16,10 +16,10 @@ router = APIRouter(prefix='/auth', tags=['Authentication'])
 def login(
     credentials: dict = Body(
         ...,
-        title='Customers Credentiales for login',
-        json_schema_extra=Login.schema()
+        title='Users Credentiales for login',
+        json_schema_extra=Login.model_json_schema()
         ),
-    db: Session = Depends(get_database_connection)):
+    db_client: MongoClient = Depends(get_database_client)):
     """
     Authenticates a user based on provided credentials.\n
     **URL:** /api/v1/auth/login\n
@@ -28,7 +28,7 @@ def login(
     **Permissions required:** None\n
     **Args:** \n
         credentials (dict): A dictionary containing the user's login credentials.\n
-        db (Session): Database session dependency.\n
+        db (MongoClient): Database session dependency.\n
     **Responses:**\n
         - 200 OK: If the user is authenticated successfully, returns a token.\n
         - 400 Bad Request: If there is a validation error in the request body.\n
@@ -55,16 +55,16 @@ def login(
 
         return JSONResponse(content=response.model_dump(), status_code=status.HTTP_400_BAD_REQUEST)
 
-    customer_repository = CustomerRepository(db)
-    customer = customer_repository.get_by_email(credentials.email)
+    users_repository = UsersRepository(db_client)
+    user = users_repository.get_by_email(credentials.email)
 
-    if not customer:
+    if not user:
         logger.log('ERROR', f"[/api/v1/auth/login] [POST] [401] User not found")
         
-        response = BadResponse(message='Customer not found')
+        response = BadResponse(message='user not found')
         return JSONResponse(content=response.model_dump(), status_code=status.HTTP_404_NOT_FOUND)
     else:
-        if not customer.password == credentials.password:
+        if not user['password'] == credentials.password:
             logger.log('ERROR', f"[/api/v1/auth/login] [POST] [401] Invalid password")
             
             response = BadResponse(message='Invalid password')
