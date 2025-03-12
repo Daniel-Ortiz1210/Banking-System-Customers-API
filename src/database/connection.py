@@ -1,39 +1,34 @@
 import os
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
+from pymongo import MongoClient
+from pymongo.database import Database
 
 from src.utils.config import Config
 
 settings = Config()
 
-database_url = f'mysql+pymysql://{settings.database_user}:{settings.database_password}@{settings.database_host}:{settings.database_port}/{settings.database_name}'
-engine = create_engine(database_url, pool_recycle=120)
-
 class DatabaseConnection:
     """
-    DatabaseConnection class to manage the creation of database sessions.
+    DatabaseConnection is a singleton class that manages the connection to a MongoDB database.
 
     Attributes:
-        _session_maker (sessionmaker): A SQLAlchemy sessionmaker instance for creating database sessions.
+        _client (MongoClient): A private class attribute that holds the MongoDB client instance.
 
     Methods:
-        __new__(cls):
-            Creates a new sessionmaker instance if it doesn't exist and returns a new session.
+        __new__(cls) -> MongoClient:
+            Creates and returns a MongoDB client instance if it doesn't already exist.
+            Constructs the MongoDB connection URL using settings for database user, password, host, and port.
     """
-    _session_maker: Session = None
+    _client: MongoClient = None
 
-    def __new__(cls):
-                
-        if cls._session_maker is None:
-            cls._session_maker = sessionmaker(engine, autoflush=False)
-        return cls._session_maker()
+    def __new__(cls) -> MongoClient:
+        url = f'mongodb://{settings.database_user}:{settings.database_password}@{settings.database_host}:{settings.database_port}'
+        if cls._client is None:
+            cls._client: MongoClient = MongoClient(url)
+        return cls._client
 
-def get_database_connection() -> Session:
-    db = DatabaseConnection()
-    try:
-        yield db
-    finally:
-        db.close()
+def get_database_client():
+    client = DatabaseConnection()    
+    
+    yield client
     
