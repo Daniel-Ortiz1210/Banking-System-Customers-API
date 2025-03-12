@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse, Response
 from pymongo import MongoClient
+
 from src.database.connection import get_database_client
 from src.utils.dependencies import JWTBearerDependencie
 from src.utils.logger import Logger
